@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+.inside {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size:15px;
+}
+
+.data {
+    font-size:12px;
+    color:grey;
+}
+
+.arc {
+  stroke:  #fff;
+
+}
+
+.arc text {
+  font: 10px sans-serif;
+  text-anchor: middle;
+}
+
+.arc path {
+  stroke: #fff;
+}
+</style>
+<body>
+
+  <script src="//d3js.org/d3.v3.min.js"></script>
+  <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+<script>
+  
+
+
+var width = 460,
+    height = 300,
+    radius = Math.min(width, height) / 2;
+
+var color = d3.scale.ordinal()
+    .range(["#98abc5", "#fa89a6", "#7bff88", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+
+var arc = d3.svg.arc()
+    .outerRadius(radius - 10)
+    .innerRadius(radius - 70);
+
+var pie = d3.layout.pie()
+    .sort(null)
+    .value(function(d) { return d.population; });
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .append("g")
+    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+//Draw the Circle
+ svg.append("circle")
+                          .attr("cx", 0)
+                          .attr("cy", 0)
+                          .attr("r", 85)
+                          .attr("fill", "white");
+
+d3.csv("data.csv", type, function(error, data) {
+  if (error) throw error;
+
+  var g = svg.selectAll(".arc")
+      .data(pie(data))
+    .enter().append("g")
+      .attr("class", "arc");
+
+  g.append("path")
+      .attr("d", arc)
+      .style("fill", function(d) { return color(d.data.age); });
+
+svg.append("text")
+      .attr("dy", "0em")
+      .style("text-anchor", "middle")
+      .attr("class", "inside")
+      .text(function() { return 'TOTAL'; });
+svg.append("text")
+       .attr("dy", "1.5em")
+      .style("text-anchor", "middle")
+      .attr("class", "data")
+      .text(function() { return '53GB / 123GB'; });
+
+});
+function type(d) {
+  d.population = +d.population;
+  return d;
+}
+</script>

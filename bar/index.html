@@ -62,6 +62,17 @@ body {
   top: 100%;
   left: 0;
 }
+  div.tooltip { 
+      position: absolute;     
+      text-align: center;     
+      width: 60px;               
+      padding: 2px;       
+      font: 12px sans-serif;    
+      background: lightsteelblue; 
+      border: 0px;    
+      border-radius: 8px;     
+      pointer-events: none;     
+  }
 </style>
 <body>
   <div class="svg-container">
@@ -103,7 +114,7 @@ var tip = d3.tip()
   .attr('class', 'd3-tip')
   .offset([-10, 0])
   .html(function(d) {
-    return "<strong>Percentage:</strong> <span style='color:red'>" + formatPercent(d.value ) + "</span>";
+    return "<strong>Percentage:</strong> <span>" + formatPercent(d.value ) + "</span>";
   })
 
 // if you change this d3.select("body") it will change it to be
