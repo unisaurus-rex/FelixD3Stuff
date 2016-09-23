@@ -73,20 +73,40 @@ body {
       border-radius: 8px;     
       pointer-events: none;     
   }
+  .svg-container {
+    display: inline-block;
+    position: relative;
+    width: 75%;
+    padding-bottom: 100%; /* aspect ratio */
+    vertical-align: top;
+    padding-right: 5em;
+    padding-top:2em;
+}
+.svg-content-responsive {
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+    left: 0;
+    /*padding:5em;*/
+    padding-left:5.75em;
+    padding-bottom: 5em;
+    padding-right:6em;
+    padding-top: 1em;
+}
 </style>
 <body>
-  <div class="svg-container">
-    <svg id="chart">
-    </svg>
-  </div>
+
+ <div id="chartid">
+</div>
+
   <div id="legend"></div>
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 <script>
 
-var margin = {top: 20, right: 20, bottom: 100, left: 40},
-    width = parseInt(d3.select("#chart").style("width")) - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+var margin = {top: 20, right: 20, bottom: 100, left: 50},
+    width = 600 - margin.left - margin.right,
+    height = 250 - margin.top - margin.bottom;
 
 var x0 = d3.scale.ordinal()
     .rangeRoundBands([0, width], .1);
@@ -119,12 +139,19 @@ var tip = d3.tip()
 
 // if you change this d3.select("body") it will change it to be
 // non responsive
-var svg = d3.select("svg").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+var svg = d3.select("div#chartid")
+    .append("div")
+    .classed("svg-container", true)
+    .append("svg")
+   .attr("preserveAspectRatio", "xMinYMin meet")
+   
+   .attr("viewBox","0 0 " + width + " " + height)
+   //class to make it responsive
+   .classed("svg-content-responsive", true);
+
+
 svg.call(tip);
+
 d3.csv("data.csv", function(error, data) {
   if (error) throw error;
 
