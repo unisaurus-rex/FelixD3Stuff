@@ -1,80 +1,11 @@
 <!DOCTYPE html>
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
-<style>
-
-  body {
-    font: 10px sans-serif;
-  }
-  .axis path,
-  .axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: auto;
-  }
-  .area {
-    fill: steelblue;
-  }
-  div.tooltip { 
-    position: absolute;     
-    text-align: center;     
-    width: 60px;               
-    padding: 2px;       
-    font: 12px sans-serif;    
-    background: lightsteelblue; 
-    border: 0px;    
-    border-radius: 8px;     
-    pointer-events: none;     
-  }
-  .d3-tip {
-    line-height: 1;
-    font-weight: bold;
-    padding: 12px;
-    background: rgba(0, 0, 0, 0.8);
-    color: #fff;
-    border-radius: 2px;
-}
-  /* Creates a small triangle extender for the tooltip */
-  .d3-tip:after {
-    box-sizing: border-box;
-    display: inline;
-    font-size: 10px;
-    width: 100%;
-    line-height: 1;
-    color: rgba(0, 0, 0, 0.8);
-    content: "\25BC";
-    position: absolute;
-    text-align: center;
-  }
-  /* Style northward tooltips differently */
-  .d3-tip.n:after {
-    margin: -1px 0 0 0;
-    top: 100%;
-    left: 0;
-  }
-  .svg-container {
-    display: inline-block;
-    position: relative;
-    width: 75%;
-    max-width: 1250px;
-    padding-bottom: 100%; /* aspect ratio */
-    vertical-align: top;
-  }
-  .svg-content-responsive {
-    display: inline-block;
-    position: absolute;
-    top: 10px;
-    left: 0;
-    /*padding:5em;*/
-    padding-top: 1em;
-    padding-left:5.95em;
-    padding-bottom: 5em;
-    padding-right:6em;
-  }
-</style>
-
-<body
->  <div id="chartid">
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/css/styles.css"></head>
+<body> 
+   <div id="chartid">
     <select id = "opts">
       <option value="daily.tsv">daily</option>
       <option value="yearly.tsv">yearly</option>
