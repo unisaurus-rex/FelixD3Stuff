@@ -5,5 +5,10 @@
   "main": "index.js",
   "scripts": {
     "watch-sass": "node-sass --source-map true --watch styles/sass --output styles/css styles/sass/style.scss"
+  },
+
+    "devDependencies": {
+    "node-sass": "^3.10.1"
   }
+
 }
