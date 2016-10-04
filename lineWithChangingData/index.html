@@ -2,6 +2,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
 <style>
+
   body {
     font: 10px sans-serif;
   }
@@ -14,7 +15,6 @@
   .area {
     fill: steelblue;
   }
-
   div.tooltip { 
       position: absolute;     
       text-align: center;     
@@ -34,228 +34,249 @@
   color: #fff;
   border-radius: 2px;
 }
-
-/* Creates a small triangle extender for the tooltip */
-.d3-tip:after {
-  box-sizing: border-box;
-  display: inline;
-  font-size: 10px;
-  width: 100%;
-  line-height: 1;
-  color: rgba(0, 0, 0, 0.8);
-  content: "\25BC";
-  position: absolute;
-  text-align: center;
-}
-
-/* Style northward tooltips differently */
-.d3-tip.n:after {
-  margin: -1px 0 0 0;
-  top: 100%;
-  left: 0;
-}
-
-.svg-container {
-    display: inline-block;
-    position: relative;
-    width: 75%;
-    max-width: 1250px;
-    padding-bottom: 100%; /* aspect ratio */
-    vertical-align: top;
-}
-.svg-content-responsive {
-    display: inline-block;
+  /* Creates a small triangle extender for the tooltip */
+  .d3-tip:after {
+    box-sizing: border-box;
+    display: inline;
+    font-size: 10px;
+    width: 100%;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.8);
+    content: "\25BC";
     position: absolute;
-    top: 10px;
+    text-align: center;
+  }
+  /* Style northward tooltips differently */
+  .d3-tip.n:after {
+    margin: -1px 0 0 0;
+    top: 100%;
     left: 0;
-    /*padding:5em;*/
-    padding-top: 1em;
-    padding-left:5.95em;
-    padding-bottom: 5em;
-    padding-right:6em;
-}
+  }
+  .svg-container {
+      display: inline-block;
+      position: relative;
+      width: 75%;
+      max-width: 1250px;
+      padding-bottom: 100%; /* aspect ratio */
+      vertical-align: top;
+  }
+  .svg-content-responsive {
+      display: inline-block;
+      position: absolute;
+      top: 10px;
+      left: 0;
+      /*padding:5em;*/
+      padding-top: 1em;
+      padding-left:5.95em;
+      padding-bottom: 5em;
+      padding-right:6em;
+  }
 </style>
 
-<body>
- <div id="chartid">
-
-</div>
-
-  <select id = "opts">
-    <option value="daily.tsv">daily</option>
-    <option value="yearly.tsv">yearly</option>
-  </select>   
+<body
+>  <div id="chartid">
+    <select id = "opts">
+      <option value="daily.tsv">daily</option>
+      <option value="yearly.tsv">yearly</option>
+    </select> 
+  </div>
 
   <script src="//d3js.org/d3.v3.min.js"></script>
   <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
-
   <script>
+    console.log(parseInt(d3.select("#chartid").style("width")))
 
-  console.log(parseInt(d3.select("#chartid").style("width")))
 
-  var margin = {top: 20, right: 20, bottom: 30, left: 50},
-      width = 600- margin.left - margin.right,
-      height = 250 - margin.top - margin.bottom;
+    //set margins for axes
+    var margin = {top: 20, right: 20, bottom: 30, left: 50},
+        width = 600- margin.left - margin.right,
+        height = 250 - margin.top - margin.bottom;
 
-  var parseDate = d3.time.format("%d-%b-%y").parse;
-  var formatTime = d3.time.format("%e %B");
-  var parseMonthYear = d3.time.format("%b-%y").parse
+    //parses time into correct format
+    var parseDate = d3.time.format("%d-%b-%y").parse;
+    var formatTime = d3.time.format("%e %B");
+    var parseMonthYear = d3.time.format("%b-%y").parse;
 
-  var x = d3.time.scale()
-      .range([0, width]);
+    //setup axes
+    var x = d3.time.scale()
+        .range([0, width]);
 
-  var y = d3.scale.linear()
-      .range([height, 0]);
+    var y = d3.scale.linear()
+        .range([height, 0]);
 
-  var xAxis = d3.svg.axis()
-      .scale(x)
-      .orient("bottom");
+    var z = d3.scale.linear()
+        .range([0, width]);
 
-  var yAxis = d3.svg.axis()
-      .scale(y)
-      .orient("left");
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
 
-  var area = d3.svg.area()
-      .x(function(d) { return x(d.date); })
-      .y0(height)
-      .y1(function(d) { return y(d.close); })
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left");
+
+    var zAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left");
+
+    //return data
+    var area = d3.svg.area()
+        .x(function(d) { return x(d.date); })
+        .y(function(d){ return z(d.pin); })
+        .y0(height)
+        .y1(function(d) { return y(d.close); })
+        ;
+
+    //draw the svg and classes into the selected div
+    var svg = d3.select("div#chartid")
+      .append("div")
+      .classed("svg-container", true)
+      .append("svg")
+      .attr("preserveAspectRatio", "xMinYMin meet")
+      .attr("viewBox","0 0 " + width + " " + height)
+      //class to make it responsive
+      .classed("svg-content-responsive", true)
       ;
 
 
+    //generate initial chart from data.tsv
+    updateChart("daily.tsv");
 
-  var svg = d3.select("div#chartid")
-    .append("div")
-    .classed("svg-container", true)
-    .append("svg")
-   .attr("preserveAspectRatio", "xMinYMin meet")
-   
-   .attr("viewBox","0 0 " + width + " " + height)
-   //class to make it responsive
-   .classed("svg-content-responsive", true)
-    //.attr("width", width + margin.left + margin.right)
-    //.attr("height", height + margin.top + margin.bottom)
-    //.append("g")
-    //.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-      ;
+    // handle data selection change
+    d3.select('#opts')
+      .on('change', function() {
+        updateChart(d3.select(this).property('value'));
+    });
 
-  function updateLegend(newData) {
+    //update data used
+    function updateChart(newData) {
+      //remove the current data
       svg.selectAll("*").remove();
-        // Define the div for the tooltip
-var tip = d3.tip()
-  .attr('class', 'd3-tip')
-  .offset([-10, 0])
-  .html(function(d) {
-    return "<strong>Spend:</strong> <span>" + d.close + "k" + "</span>";
-  })
-  svg.call(tip);
 
-      if (newData == "daily.tsv")
-      {
+      // Define the div for the tooltip
+      var tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .html(function(d) {
+          return "<strong>Spend:</strong> <span>" + d.close + "k" + "</span>";
+        })
+      svg.call(tip);
+
+      //if daily is chosen
+      if (newData == "daily.tsv"){
         console.log('daily');
         
         d3.tsv("daily.tsv", function(error, data) {
-        if (error) throw error;
+          if (error) throw error;
 
-        data.forEach(function(d) {
-          d.date = parseDate(d.date);
-          d.close = +d.close;
-        });
+          //get the data
+          data.forEach(function(d) {
+            d.date = parseDate(d.date);
+            d.close = +d.close;
+            d.pin = +d.pin;
+          });
 
-        x.domain(d3.extent(data, function(d) { return d.date; }));
-        y.domain([0, d3.max(data, function(d) { return d.close; })]);
+          //set the domain
+          x.domain(d3.extent(data, function(d) { return d.date; }));
+          z.domain(d3.extent(data, function(d) { return d.pin; }));
+          y.domain([0, d3.max(data, function(d) { return d.close; })]);
 
-        svg.append("path")
+          //draw the paths
+          svg.append("path")
             .datum(data)
             .attr("class", "area")
-            .attr("d", area);
+            .attr("d", area); 
 
-        svg.append("g")
+          //set x axis
+          svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
             .call(xAxis);
 
-          // Add the scatterplot
-        var dots = svg.selectAll("dot")  
+
+          //y axis
+          svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text("Spending in thousands");
+
+          //Add the scatterplot points
+          var dots = svg.selectAll("dot")  
             .data(data);
-        
-        dots.enter().append("circle")               
+          
+          //add the circles and hover events
+          dots.enter().append("circle")               
             .attr("r", 3)   
             .attr("cx", function(d) { return x(d.date); })     
             .attr("cy", function(d) { return y(d.close); })
+            .attr("test", function(d) {return y(d.pin); })
             .on('mouseover', tip.show)
-            .on('mouseout', tip.hide)        
+            .on('mouseout', tip.hide);        
 
-
-            svg.append("g")
-                .attr("class", "y axis")
-                .call(yAxis)
-              .append("text")
-                .attr("transform", "rotate(-90)")
-                .attr("y", 6)
-                .attr("dy", ".71em")
-                .style("text-anchor", "end")
-                .text("Spending in thousands");
         })
       }
 
-    if (newData == "yearly.tsv")
-    {
-      console.log('yearly');
-      
-      d3.tsv("yearly.tsv", function(error, data) {
-      if (error) throw error;
+      if (newData == "yearly.tsv"){
+        
+        console.log('yearly');
+        
+        //plot yearly
+        d3.tsv("yearly.tsv", function(error, data) {
+          if (error) throw error;
 
-      data.forEach(function(d) {
-        d.date = parseMonthYear(d.date);
-        d.close = +d.close;
-      });
+        //get the data
+        data.forEach(function(d) {
+          d.date = parseMonthYear(d.date);
+          d.close = +d.close;
+        });
 
-      x.domain(d3.extent(data, function(d) { return d.date; }));
-      y.domain([0, d3.max(data, function(d) { return d.close; })]);
+        //set domains
+        x.domain(d3.extent(data, function(d) { return d.date; }));
+        y.domain([0, d3.max(data, function(d) { return d.close; })]);
 
-      svg.append("path")
+        //draw the path
+        svg.append("path")
           .datum(data)
           .attr("class", "area")
           .attr("d", area);
 
-      svg.append("g")
+        //x axis
+        svg.append("g")
           .attr("class", "x axis")
           .attr("transform", "translate(0," + height + ")")
           .call(xAxis);
 
-      // Add the scatterplot
-      var dots = svg.selectAll("dot")  
+        //y axis
+        svg.append("g")
+          .attr("class", "y axis")
+          .call(yAxis)
+          .append("text")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 6)
+          .attr("dy", ".71em")
+          .style("text-anchor", "end")
+          .text("Spending in thousands")
+          ;
+
+        // Add the scatterplot
+        var dots = svg.selectAll("dot")  
           .data(data);
-      
-      dots.enter().append("circle")               
+        
+        //add the circles and hover events
+        dots.enter().append("circle")               
           .attr("r", 3)   
           .attr("cx", function(d) { return x(d.date); })     
-          .attr("cy", function(d) { return y(d.close); })   
-            .on('mouseover', tip.show)
-            .on('mouseout', tip.hide)   
-
-          svg.append("g")
-              .attr("class", "y axis")
-              .call(yAxis)
-            .append("text")
-              .attr("transform", "rotate(-90)")
-              .attr("y", 6)
-              .attr("dy", ".71em")
-              .style("text-anchor", "end")
-              .text("Spending in thousands");
-      })
-    } 
-  }
-
-  // generate initial legend
-  updateLegend("daily.tsv");
-
-  // handle on click event
-  d3.select('#opts')
-    .on('change', function() {
-      //var newData = eval();
-      updateLegend(d3.select(this).property('value'));
-  });
-
-
+          .attr("cy", function(d) { return y(d.close); })
+          .attr("test", function(d) {return y(d.pin); })
+          .on('mouseover', tip.show)
+          .on('mouseout', tip.hide);  
+          ;   
+        }) //end yearly plot
+      } //end if for year
+    } // end update legend function
   </script>
