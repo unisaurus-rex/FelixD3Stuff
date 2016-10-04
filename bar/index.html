@@ -1,77 +1,69 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
-
-body {
-  font: 10px sans-serif;
-}
-
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-
-.bar {
-  fill: steelblue;
-}
-
-.x.axis path {
-  display: none;
-}
-
-.svg-container {
+  body {
+    font: 10px sans-serif;
+  }
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+  .bar {
+    fill: steelblue;
+  }
+  .x.axis path {
+    display: none;
+  }
+  .svg-container {
     display: inline-block;
     position: relative;
     width: 100%;
     max-width: 1250px;
     vertical-align: top;
     overflow: hidden;
-}
-#chart{
-  width: 100%;
-  height: 60em;
-}
-
-.d3-tip {
-  line-height: 1;
-  font-weight: bold;
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  border-radius: 2px;
-}
-
-/* Creates a small triangle extender for the tooltip */
-.d3-tip:after {
-  box-sizing: border-box;
-  display: inline;
-  font-size: 10px;
-  width: 100%;
-  line-height: 1;
-  color: rgba(0, 0, 0, 0.8);
-  content: "\25BC";
-  position: absolute;
-  text-align: center;
-}
-
-/* Style northward tooltips differently */
-.d3-tip.n:after {
-  margin: -1px 0 0 0;
-  top: 100%;
-  left: 0;
-}
+  }
+  #chart{
+    width: 100%;
+    height: 60em;
+  }
+  .d3-tip {
+    line-height: 1;
+    font-weight: bold;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 2px;
+  }
+  /* Creates a small triangle extender for the tooltip */
+  .d3-tip:after {
+    box-sizing: border-box;
+    display: inline;
+    font-size: 10px;
+    width: 100%;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.8);
+    content: "\25BC";
+    position: absolute;
+    text-align: center;
+  }
+  /* Style northward tooltips differently */
+  .d3-tip.n:after {
+    margin: -1px 0 0 0;
+    top: 100%;
+    left: 0;
+  }
   div.tooltip { 
-      position: absolute;     
-      text-align: center;     
-      width: 60px;               
-      padding: 2px;       
-      font: 12px sans-serif;    
-      background: lightsteelblue; 
-      border: 0px;    
-      border-radius: 8px;     
-      pointer-events: none;     
+    position: absolute;     
+    text-align: center;     
+    width: 60px;               
+    padding: 2px;       
+    font: 12px sans-serif;    
+    background: lightsteelblue; 
+    border: 0px;    
+    border-radius: 8px;     
+    pointer-events: none;     
   }
   .svg-container {
     display: inline-block;
@@ -81,8 +73,8 @@ body {
     vertical-align: top;
     padding-right: 10em;
     padding-top:2em;
-}
-.svg-content-responsive {
+  }
+  .svg-content-responsive {
     display: inline-block;
     position: absolute;
     top: 10px;
@@ -92,103 +84,114 @@ body {
     padding-bottom: 5em;
     padding-right:6em;
     padding-top: 1em;
-}
+  }
 </style>
-<body>
 
- <div id="chartid">
-</div>
+<body>
+  <div id="chartid">
+  </div>
 
   <div id="legend"></div>
+
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 <script>
 
-var margin = {top: 20, right: 20, bottom: 100, left: 50},
+  // margins
+  var margin = {top: 20, right: 20, bottom: 100, left: 50},
     width = 600 - margin.left - margin.right,
     height = 250 - margin.top - margin.bottom;
 
-var x0 = d3.scale.ordinal()
+  //create scales
+  var x0 = d3.scale.ordinal()
     .rangeRoundBands([0, width], .1);
-
-var x1 = d3.scale.ordinal();
-
-var y = d3.scale.linear()
+  var x1 = d3.scale.ordinal();
+  var y = d3.scale.linear()
     .range([height, 0]);
 
-var color = d3.scale.ordinal()
+  //colors
+  var color = d3.scale.ordinal()
     .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
-var xAxis = d3.svg.axis()
+  //x axis
+  var xAxis = d3.svg.axis()
     .scale(x0)
     .orient("bottom");
 
-var formatPercent = d3.format(".1%");
+  //formatting for output
+  var formatPercent = d3.format(".1%");
 
-var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left")
-    .tickFormat(formatPercent);
+  //y axis
+  var yAxis = d3.svg.axis()
+      .scale(y)
+      .orient("left")
+      .tickFormat(formatPercent);
 
-var tip = d3.tip()
-  .attr('class', 'd3-tip')
-  .offset([-10, 0])
-  .html(function(d) {
-    return "<strong>Percentage:</strong> <span>" + formatPercent(d.value ) + "</span>";
-  })
+  //tool tips
+  var tip = d3.tip()
+    .attr('class', 'd3-tip')
+    .offset([-10, 0])
+    .html(function(d) {
+      return "<strong>Percentage:</strong> <span>" + formatPercent(d.value ) + "</span>";
+    })
 
-// if you change this d3.select("body") it will change it to be
-// non responsive
-var svg = d3.select("div#chartid")
+  //add svg
+  var svg = d3.select("div#chartid")
     .append("div")
     .classed("svg-container", true)
     .append("svg")
-   .attr("preserveAspectRatio", "xMinYMin meet")
-   
-   .attr("viewBox","0 0 " + width + " " + height)
-   //class to make it responsive
-   .classed("svg-content-responsive", true);
+    .attr("preserveAspectRatio", "xMinYMin meet")     
+    .attr("viewBox","0 0 " + width + " " + height)
+     //class to make it responsive
+    .classed("svg-content-responsive", true);
 
+  //initialize tooltip
+  svg.call(tip);
 
-svg.call(tip);
+  //plot data 
+  d3.csv("data.csv", function(error, data) {
+    if (error) throw error;
 
-d3.csv("data.csv", function(error, data) {
-  if (error) throw error;
+    //return data component other than x axis key
+    var ageNames = d3.keys(data[0]).filter(function(key) { return key !== "Issuer"; });
 
-  var ageNames = d3.keys(data[0]).filter(function(key) { return key !== "Issuer"; });
+    //return data
+    data.forEach(function(d) {
+      d.ages = ageNames.map(function(name) { return {name: name, value: +d[name]}; });
+    });
 
-  data.forEach(function(d) {
-    d.ages = ageNames.map(function(name) { return {name: name, value: +d[name]}; });
-  });
+    //set domains
+    x0.domain(data.map(function(d) { return d.Issuer; }));
+    x1.domain(ageNames).rangeRoundBands([0, x0.rangeBand()]);
+    y.domain([0, d3.max(data, function(d) { return d3.max(d.ages, function(d) { return d.value; }); })]);
 
-  x0.domain(data.map(function(d) { return d.Issuer; }));
-  x1.domain(ageNames).rangeRoundBands([0, x0.rangeBand()]);
-  y.domain([0, d3.max(data, function(d) { return d3.max(d.ages, function(d) { return d.value; }); })]);
-
-  svg.append("g")
+    //x axis
+    svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
       .call(xAxis);
-
-  svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
+    //y axis
+    svg.append("g")
+    .attr("class", "y axis")
+    .call(yAxis)
     .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("percentage");
+    .attr("transform", "rotate(-90)")
+    .attr("y", 6)
+    .attr("dy", ".71em")
+    .style("text-anchor", "end")
+    .text("percentage");
 
-  var issuer = svg.selectAll(".issuer")
+    // x axis text
+    var issuer = svg.selectAll(".issuer")
       .data(data)
-    .enter().append("g")
+      .enter().append("g")
       .attr("class", "issuer")
       .attr("transform", function(d) { return "translate(" + x0(d.Issuer) + ",0)"; });
 
-  issuer.selectAll("rect")
+    // drawing the bars
+    issuer.selectAll("rect")
       .data(function(d) { return d.ages; })
-    .enter().append("rect")
+      .enter().append("rect")
       .attr("width", x1.rangeBand())
       .attr("x", function(d) { return x1(d.name); })
       .attr("y", function(d) { return y(d.value); })
@@ -198,31 +201,29 @@ d3.csv("data.csv", function(error, data) {
       .on('mouseout', tip.hide)
       ;
 
-
-  var legend = svg.selectAll(".legend")
+    // legend stuff this will likely by css instead of d3
+    var legend = svg.selectAll(".legend")
       .data(ageNames.slice().reverse())
-    .enter().append("g")
+      .enter().append("g")
       .attr("class", "legend")
       .attr("transform", function(d, i) { return "translate(" + (-width+ width/20 + i* width/5.5) + "," + "400" + ")"; });
 
-
-  legend.append("rect")
+    //draw the legend bars
+    legend.append("rect")
       .attr("x", width - 18)
       .attr("width", 18)
       .attr("height", 18)
       .style("fill", color)
       ;//.position("left");
 
-  legend.append("text")
+    //draw the legend text
+    legend.append("text")
       .attr("x", width - 24)
       .attr("y", 9)
       .attr("dy", ".35em")
       .style("text-anchor", "end")
       .text(function(d) { return d; });
-
-
-  //legend.position("right");
-});
+  }); //end d3 read
 
 
 
