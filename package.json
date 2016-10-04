@@ -1,0 +1,9 @@
+{
+  "name": "data-viz-charts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "watch-sass": "node-sass --source-map true --watch styles/sass --output styles/css styles/sass/style.scss"
+  }
+}
