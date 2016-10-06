@@ -16,7 +16,7 @@
 
   // margins
   var margin = {top: 20, right: 20, bottom: 100, left: 50},
-    width = 600 - margin.left - margin.right,
+    width = 1000 - margin.left - margin.right,
     height = 250 - margin.top - margin.bottom;
 
   //create scales
@@ -60,7 +60,7 @@
     .attr("preserveAspectRatio", "xMinYMin meet")     
     .attr("viewBox","0 0 " + width + " " + height)
      //class to make it responsive
-    .classed("svg-content-responsive", true);
+    .classed("svg-content-responsive padding", true);
 
   //initialize tooltip
   svg.call(tip);

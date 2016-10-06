@@ -1,48 +1,46 @@
 
 $teal: #507075;
-
+$vantiv-blue: #00a9e0;
+$grey-black: #2c2c2c;
+$height: 600px;
 
 /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!DONUT STUFFF*/
 .d3-tip {
 	background-color: $teal;
 }
+.svg-container{
+  height: $height;
+}
 
+.data {
+  font-size:12px;
+  color:grey;
+}
 
-  .inside {
-    font-family: 'Source Sans Pro', sans-serif;
-    font-size:15px;
-  }
-
-  .data {
-    font-size:12px;
-    color:grey;
-  }
-
-  .arc {
+.arc {
   stroke:  #fff;
 
-  }
-
-  .arc text {
+}
+.arc text {
   font: 10px sans-serif;
   text-anchor: middle;
-  }
+}
 
-  .arc path {
+.arc path {
   stroke: #fff;
-  }
+}
 
-  .d3-tip {
+.d3-tip {
   line-height: 1;
   font-weight: bold;
   padding: 12px;
   background: rgba(0, 0, 0, 0.8);
   color: #fff;
   border-radius: 2px;
-  }
+}
 
-  /* Creates a small triangle extender for the tooltip */
-  .d3-tip:after {
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
   box-sizing: border-box;
   display: inline;
   font-size: 10px;
@@ -52,84 +50,107 @@ $teal: #507075;
   content: "\25BC";
   position: absolute;
   text-align: center;
-  }
+}
 
-  /* Style northward tooltips differently */
-  .d3-tip.n:after {
+/* Style northward tooltips differently */
+.d3-tip.n:after {
   margin: -1px 0 0 0;
   top: 100%;
   left: 0;
-  }
+}
 
-  svg{
+svg{
   padding: 50px;
-  }
+}
+
+/*.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: auto;
+}*/
+.area {
+  fill: steelblue;
+}
+div.tooltip { 
+  position: absolute;     
+  text-align: center;     
+  width: 60px;               
+  padding: 2px;       
+  font: 12px sans-serif;    
+  background: lightsteelblue; 
+  border: 0px;    
+  border-radius: 8px;     
+  pointer-events: none;     
+}
+
+.svg-container {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  max-width: 1250px;
+  vertical-align: top;
+  overflow: hidden;
+}
+.svg-content-responsive {
+  display: inline-block;
+  position: absolute;
+  top: 10px;
+  left: 0;
+  padding: 0px;
+  width: 85%;
+  padding-bottom: 5em;
+}
 
 
-  body {
-    font: 10px sans-serif;
-  }
-  .axis path,
-  .axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: auto;
-  }
-  .area {
-    fill: steelblue;
-  }
-  div.tooltip { 
-    position: absolute;     
-    text-align: center;     
-    width: 60px;               
-    padding: 2px;       
-    font: 12px sans-serif;    
-    background: lightsteelblue; 
-    border: 0px;    
-    border-radius: 8px;     
-    pointer-events: none;     
-  }
 
-    .svg-container {
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 7px;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.bar {
+  fill: steelblue;
+}
+.x.axis path {
+  display: none;
+}
+
+#chart{
+  width: 100%;
+  height: 60em;
+}
+
+/* wrapping around charts */
+.chartwrapper{
+  width: 100%;
+  height:800px;
+}
+
+/* donut */
+.inside {
+  font-family: 'Source Sans Pro', sans-serif;
+  fill: $vantiv-blue;
+  font-size:40px;
+}
+.data{
+  fill: $grey-black;
+  font-size: 64px;
+}
+
+.padding{
+  padding: 10em;
+}
+.svg-content-responsive-pie{
     display: inline-block;
-    position: relative;
-    width: 100%;
-    max-width: 1250px;
-    vertical-align: top;
-    overflow: hidden;
-  }
-  .svg-content-responsive {
-    display: inline-block;
-    position: absolute;
-    top: 10px;
-    left: 0;
-    /*padding:5em;*/
-    padding-top: 1em;
-    padding-left:5.95em;
-    padding-bottom: 5em;
-    padding-right:6em;
-  }
-
-
-    body {
-    font: 10px sans-serif;
-  }
-  .axis path,
-  .axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
-  }
-  .bar {
-    fill: steelblue;
-  }
-  .x.axis path {
-    display: none;
-  }
-
-  #chart{
-    width: 100%;
-    height: 60em;
-  }
-
-  
+  position: absolute;
+  top: 10px;
+  left: 0;
+  width: 94%;
+  padding: 1em;
+}

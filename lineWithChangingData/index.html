@@ -5,12 +5,14 @@
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
   <link rel="stylesheet" href="../styles/css/styles.css"></head>
 <body> 
+<div class="chartwrapper">
    <div id="chartid">
     <select id = "opts">
       <option value="daily.tsv">daily</option>
       <option value="yearly.tsv">yearly</option>
     </select> 
   </div>
+</div>
 
   <script src="//d3js.org/d3.v3.min.js"></script>
   <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
@@ -20,8 +22,8 @@
 
     //set margins for axes
     var margin = {top: 20, right: 20, bottom: 30, left: 50},
-        width = 600- margin.left - margin.right,
-        height = 250 - margin.top - margin.bottom;
+        width = 400- margin.left - margin.right,
+        height = 175 - margin.top - margin.bottom;
 
     //parses time into correct format
     var parseDate = d3.time.format("%d-%b-%y").parse;
@@ -64,6 +66,7 @@
       .classed("svg-container", true)
       .append("svg")
       .attr("preserveAspectRatio", "xMinYMin meet")
+      .classed("svg-container padding", true)
       .attr("viewBox","0 0 " + width + " " + height)
       //class to make it responsive
       .classed("svg-content-responsive", true)
