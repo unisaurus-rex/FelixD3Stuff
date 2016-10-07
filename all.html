@@ -45,38 +45,25 @@ function drawLine(){
     var y = d3.scale.linear()
       .range([height, 0]);
 
-    var z = d3.scale.linear()
-      .range([0, width]);
 
-    var xAxis = d3.svg.axis()
-      .scale(x)
-      .orient("bottom")
-      .ticks(8)
-      .innerTickSize(-height)
-      .outerTickSize(0)
-      .tickPadding(10)
-      ;
 
-    var yAxis = d3.svg.axis()
-      .scale(y)
-      .orient("left")
-      .ticks(5)
-      .innerTickSize(-width)
-      .outerTickSize(0)
-      .tickPadding(10)
-      ;
 
     var zAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left");
+      .scale(y)
+      .orient("left");
 
     //return data
     var area = d3.svg.area()
-        .x(function(d) { return x(d.date); })
-        .y(function(d){ return z(d.pin); })
-        .y0(height)
-        .y1(function(d) { return y(d.close); })
-        ;
+      .x(function(d) { return x(d.date); })
+      .y0(height)
+      .y1(function(d) { return y(d.close); })
+      ;
+
+    var areatwo = d3.svg.area()
+      .x(function(d) { return x(d.date); })
+      .y0(height)
+      .y1(function(d) { return y(d.pin); })
+      ;
 
     //draw the svg and classes into the selected div
     var svgtwo = d3.select("div#chartlineid")
@@ -114,12 +101,43 @@ function drawLine(){
         })
       svgtwo.call(tip);
 
+      var secondtip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .html(function(d) {
+          return "<strong>Spend:</strong> <span>" + d.pin + "k" + "</span>";
+        })
+      svgtwo.call(secondtip);
+
       //if daily is chosen
       if (newData == "daily.tsv"){
         console.log('daily');
         
+
+
+
         d3.tsv("daily.tsv", function(error, data) {
           if (error) throw error;
+
+
+    var xAxis = d3.svg.axis()
+      .scale(x)
+      .orient("bottom")
+      .ticks(8)
+      .innerTickSize(-height)
+      .outerTickSize(0)
+      .tickPadding(10)
+      ;
+
+    var yAxis = d3.svg.axis()
+      .scale(y)
+      .orient("left")
+      .ticks(5)
+      .innerTickSize(-width)
+      .outerTickSize(0)
+      .tickPadding(10)
+      ;
+
 
           //get the data
           data.forEach(function(d) {
@@ -130,15 +148,23 @@ function drawLine(){
 
           //set the domain
           x.domain(d3.extent(data, function(d) { return d.date; }));
-          z.domain(d3.extent(data, function(d) { return d.pin; }));
-          y.domain([0, d3.max(data, function(d) { return d.close; })]);
+          y.domain([0, d3.max(data, function(d) { return Math.max(d.close, d.pin); })]);
 
           //draw the paths
           svgtwo.append("path")
             .datum(data)
             .attr("class", "area")
-            .attr("d", area); 
-
+            .attr("d", area)
+            .style("stroke", "#00a9e0")
+            .style("fill", "#00a9e0")
+            ;
+          svgtwo.append("path")
+            .datum(data)
+            .attr("class", "area")
+            .attr("d", areatwo)
+            .style("stroke", "#ff0000")
+            .style("fill", "#ff0000")
+            ;
           //set x axis
           svgtwo.append("g")
             .attr("class", "x axis")
@@ -165,10 +191,17 @@ function drawLine(){
             .attr("r", 3)   
             .attr("cx", function(d) { return x(d.date); })     
             .attr("cy", function(d) { return y(d.close); })
-            .attr("test", function(d) {return y(d.pin); })
             .on('mouseover', tip.show)
             .on('mouseout', tip.hide)
-            ;        
+            ; 
+
+          dots.enter().append("circle")               
+            .attr("r", 3)   
+            .attr("cx", function(d) { return x(d.date); })     
+            .attr("cy", function(d) { return y(d.pin); })
+            .on('mouseover', secondtip.show)
+            .on('mouseout', secondtip.hide)
+            ;               
 
         })
       }
@@ -185,19 +218,47 @@ function drawLine(){
         data.forEach(function(d) {
           d.date = parseMonthYear(d.date);
           d.close = +d.close;
+          d.pin = +d.pin;
         });
+
+    var xAxis = d3.svg.axis()
+      .scale(x)
+      .orient("bottom")
+      .ticks(8)
+      .innerTickSize(-height)
+      .outerTickSize(0)
+      .tickPadding(10)
+      .tickFormat(d3.time.format("%b"))
+      ;
+
+    var yAxis = d3.svg.axis()
+      .scale(y)
+      .orient("left")
+      .ticks(5)
+      .innerTickSize(-width)
+      .outerTickSize(0)
+      .tickPadding(10)
+      ;
 
         //set domains
         x.domain(d3.extent(data, function(d) { return d.date; }));
         y.domain([0, d3.max(data, function(d) { return d.close; })]);
 
-        //draw the path
-        svgtwo.append("path")
-          .datum(data)
-          .attr("class", "area")
-          .attr("d", area)
-          ;
+          svgtwo.append("path")
+            .datum(data)
+            .attr("class", "area")
+            .attr("d", area)
+            .style("stroke", "#00a9e0")
+            .style("fill", "#00a9e0")
+            ;
 
+          svgtwo.append("path")
+            .datum(data)
+            .attr("class", "area")
+            .attr("d", areatwo)
+            .style("stroke", "#ff0000")
+            .style("fill", "#ff0000")
+            ;
         //x axis
         svgtwo.append("g")
           .attr("class", "x axis")
@@ -222,14 +283,23 @@ function drawLine(){
           .data(data);
         
         //add the circles and hover events
-        dots.enter().append("circle")               
-          .attr("r", 3)   
-          .attr("cx", function(d) { return x(d.date); })     
-          .attr("cy", function(d) { return y(d.close); })
-          .attr("test", function(d) {return y(d.pin); })
-          .on('mouseover', tip.show)
-          .on('mouseout', tip.hide)
-          ;   
+          dots.enter().append("circle")               
+            .attr("r", 3)   
+            .attr("cx", function(d) { return x(d.date); })     
+            .attr("cy", function(d) { return y(d.close); })
+            .on('mouseover', tip.show)
+            .on('mouseout', tip.hide)
+            ; 
+
+          dots.enter().append("circle")               
+            .attr("r", 3)   
+            .attr("cx", function(d) { return x(d.date); })     
+            .attr("cy", function(d) { return y(d.pin); })
+            .on('mouseover', secondtip.show)
+            .on('mouseout', secondtip.hide)
+            ; 
+
+
         }) //end yearly plot
       } //end if for year
     } // end update legend function
