@@ -70,9 +70,6 @@ svg {
   stroke: #000;
   shape-rendering: auto;
 }*/
-.area {
-  fill: steelblue; }
-
 .svg-container {
   display: inline-block;
   position: relative;
@@ -146,5 +143,15 @@ body {
 .tick line {
   opacity: 0.1;
   fill: #8b8c8d; }
+
+/* line graph */
+circle {
+  opacity: 0; }
+
+.area {
+  stroke: #00a9e0;
+  fill: #00a9e0;
+  fill-opacity: 0.4;
+  stroke-width: 1.25; }
 
 /*# sourceMappingURL=styles.css.map */
