@@ -100,7 +100,7 @@ svg{
   top: 10px;
   left: 0;
   padding: 0px;
-  width: 85%;
+  width: 100%;
   padding-bottom: 5em;
 }
 
@@ -175,9 +175,11 @@ body {
 circle{
   opacity: 0;
 }
-.area{
-  stroke: $vantiv-blue;
-  fill: $vantiv-blue;
+#chartlineid .area{
   fill-opacity: 0.4;
   stroke-width: 1.25;
+}
+/* smooth line graph*/
+#chartsmoothlineid .area{
+  fill-opacity: 0.8;
 }

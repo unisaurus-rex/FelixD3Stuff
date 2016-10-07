@@ -1,4 +1,4 @@
-function drawLine(){
+function drawSmoothLine(){
    //set margins for axes
     var margin = {top: 20, right: 20, bottom: 30, left: 50},
       width = 400- margin.left - margin.right,
@@ -21,18 +21,18 @@ function drawLine(){
       .x(function(d) { return x(d.date); })
       .y0(height)
       .y1(function(d) { return y(d.close); })
-      //.interpolate("basis") //smooth lines 
+      .interpolate("basis") //smooth lines 
       ;
 
     var areatwo = d3.svg.area()
       .x(function(d) { return x(d.date); })
       .y0(height)
       .y1(function(d) { return y(d.pin); })
-      //.interpolate("basis") //smooth lines 
+      .interpolate("basis") //smooth lines 
       ;
 
     //draw the svg and classes into the selected div
-    var svg = d3.select("div#chartlineid")
+    var svgtwo = d3.select("div#chartsmoothlineid")
       .append("div")
       .classed("svg-container", true)
       .append("svg")
@@ -44,7 +44,7 @@ function drawLine(){
       ;
 
     //generate initial chart from data.tsv
-    updateChart("daily.tsv");
+    updateChart("yearly.tsv");
 
     // handle data selection change
     d3.select('#opts')
@@ -55,7 +55,7 @@ function drawLine(){
     //update data used
     function updateChart(newData) {
       //remove the current data
-      svg.selectAll("*").remove();
+      svgtwo.selectAll("*").remove();
 
       // Define the div for the tooltip
       var tip = d3.tip()
@@ -64,7 +64,7 @@ function drawLine(){
         .html(function(d) {
           return "<strong>Spend:</strong> <span>" + d.close + "k" + "</span>";
         })
-      svg.call(tip);
+      svgtwo.call(tip);
 
       var secondtip = d3.tip()
         .attr('class', 'd3-tip')
@@ -72,7 +72,7 @@ function drawLine(){
         .html(function(d) {
           return "<strong>Spend:</strong> <span>" + d.pin + "k" + "</span>";
         })
-      svg.call(secondtip);
+      svgtwo.call(secondtip);
 
       //if daily is chosen
       if (newData == "daily.tsv"){
@@ -113,29 +113,29 @@ function drawLine(){
           y.domain([0, d3.max(data, function(d) { return Math.max(d.close, d.pin); })]);
 
           //draw the paths
-          svg.append("path")
+          svgtwo.append("path")
             .datum(data)
             .attr("class", "area")
             .attr("d", area)
-            .style("stroke", "#00a9e0")
+            //.style("stroke", "#00a9e0")
             .style("fill", "#00a9e0")
             ;
-          svg.append("path")
+          svgtwo.append("path")
             .datum(data)
             .attr("class", "area")
             .attr("d", areatwo)
-            .style("stroke", "#ff0000")
-            .style("fill", "#ff0000")
+            //.style("stroke", "#ff0000")
+            .style("fill", "#8b8c8d")
             ;
 
           //set x axis
-          svg.append("g")
+          svgtwo.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
             .call(xAxis);
 
           //y axis
-          svg.append("g")
+          svgtwo.append("g")
             .attr("class", "y axis")
             .call(yAxis)
             .append("text")
@@ -143,13 +143,14 @@ function drawLine(){
             .attr("y", 6)
             .attr("dy", ".71em")
             .style("text-anchor", "end")
-            //.text("Spending in thousands");
+            .text("Spending in thousands");
 
           //Add the scatterplot points
-          var dots = svg.selectAll("dot")  
+          var dots = svgtwo.selectAll("dot")  
             .data(data);
           
           //add the circles and hover events
+          /*
           dots.enter().append("circle")               
             .attr("r", 3)   
             .attr("cx", function(d) { return x(d.date); })     
@@ -165,7 +166,7 @@ function drawLine(){
             .on('mouseover', secondtip.show)
             .on('mouseout', secondtip.hide)
             ;               
-
+          */
         })
       }
 
@@ -208,30 +209,30 @@ function drawLine(){
         x.domain(d3.extent(data, function(d) { return d.date; }));
         y.domain([0, d3.max(data, function(d) { return d.close; })]);
 
-          svg.append("path")
+          svgtwo.append("path")
             .datum(data)
             .attr("class", "area")
             .attr("d", area)
-            .style("stroke", "#00a9e0")
-            .style("fill", "#00a9e0")
+            //.style("stroke", "#00a9e0")
+            .style("fill", "#8b8c8d")
             ;
 
-          svg.append("path")
+          svgtwo.append("path")
             .datum(data)
             .attr("class", "area")
             .attr("d", areatwo)
-            .style("stroke", "#ff0000")
-            .style("fill", "#ff0000")
+            //.style("stroke", "#ff0000")
+            .style("fill", "#00a9e0")
             ;
         //x axis
-        svg.append("g")
+        svgtwo.append("g")
           .attr("class", "x axis")
           .attr("transform", "translate(0," + height + ")")
           .call(xAxis)
           ;
 
         //y axis
-        svg.append("g")
+        svgtwo.append("g")
           .attr("class", "y axis")
           .call(yAxis)
           .append("text")
@@ -239,16 +240,17 @@ function drawLine(){
           .attr("y", 6)
           .attr("dy", ".71em")
           .style("text-anchor", "end")
-          .text("Spending in thousands")
+          //.text("Spending in thousands")
           ;
 
         // Add the scatterplot
-        var dots = svg.selectAll("dot")  
+        var dots = svgtwo.selectAll("dot")  
           .data(data);
         
         //add the circles and hover events
+          /*         
           dots.enter().append("circle")               
-            .attr("r", 3)   
+            .attr("r", 5)   
             .attr("cx", function(d) { return x(d.date); })     
             .attr("cy", function(d) { return y(d.close); })
             .on('mouseover', tip.show)
@@ -256,13 +258,13 @@ function drawLine(){
             ; 
 
           dots.enter().append("circle")               
-            .attr("r", 3)   
+            .attr("r", 5)   
             .attr("cx", function(d) { return x(d.date); })     
             .attr("cy", function(d) { return y(d.pin); })
             .on('mouseover', secondtip.show)
             .on('mouseout', secondtip.hide)
             ; 
-
+          */
 
         }) //end yearly plot
       } //end if for year

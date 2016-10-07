@@ -18,6 +18,11 @@
     </div>
   </div>
 
+    <div class="chartwrapper">
+     <div id="chartsmoothlineid">
+    </div>
+  </div>
+
   <div class="chartwrapper">
     <div id="donutid">
     </div>
@@ -25,17 +30,24 @@
 
   <div id="chartbarid">
   </div>
+
+  <div id="chartflippedbarid">
+  </div>
   
   <script src="//d3js.org/d3.v3.min.js"></script>
   <script src="allcharts/line.js"></script>
   <script src="allcharts/donut.js"></script>
   <script src="allcharts/bar.js"></script>
+  <script src="allcharts/smoothline.js"></script>
+  <script src="allcharts/flippedbar.js"></script>
 
   <script   src="http://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"> </script>
   <script src="d3-tip.js"></script>
   <script>
     drawLine();
+    drawSmoothLine();
     drawDonut();
     drawBar();
+    drawFlippedBar();
   </script>
