@@ -45,13 +45,6 @@ function drawLine(){
     var y = d3.scale.linear()
       .range([height, 0]);
 
-
-
-
-    var zAxis = d3.svg.axis()
-      .scale(y)
-      .orient("left");
-
     //return data
     var area = d3.svg.area()
       .x(function(d) { return x(d.date); })
@@ -76,7 +69,6 @@ function drawLine(){
       //class to make it responsive
       .classed("svg-content-responsive", true)
       ;
-
 
     //generate initial chart from data.tsv
     updateChart("daily.tsv");
@@ -112,32 +104,28 @@ function drawLine(){
       //if daily is chosen
       if (newData == "daily.tsv"){
         console.log('daily');
-        
-
-
 
         d3.tsv("daily.tsv", function(error, data) {
           if (error) throw error;
 
+        var xAxis = d3.svg.axis()
+          .scale(x)
+          .orient("bottom")
+          .ticks(8)
+          .ticks(d3.time.days, 3)
+          .innerTickSize(-height)
+          .outerTickSize(0)
+          .tickPadding(10)
+          ;
 
-    var xAxis = d3.svg.axis()
-      .scale(x)
-      .orient("bottom")
-      .ticks(8)
-      .innerTickSize(-height)
-      .outerTickSize(0)
-      .tickPadding(10)
-      ;
-
-    var yAxis = d3.svg.axis()
-      .scale(y)
-      .orient("left")
-      .ticks(5)
-      .innerTickSize(-width)
-      .outerTickSize(0)
-      .tickPadding(10)
-      ;
-
+        var yAxis = d3.svg.axis()
+          .scale(y)
+          .orient("left")
+          .ticks(5)
+          .innerTickSize(-width)
+          .outerTickSize(0)
+          .tickPadding(10)
+          ;
 
           //get the data
           data.forEach(function(d) {
@@ -165,6 +153,7 @@ function drawLine(){
             .style("stroke", "#ff0000")
             .style("fill", "#ff0000")
             ;
+
           //set x axis
           svgtwo.append("g")
             .attr("class", "x axis")
