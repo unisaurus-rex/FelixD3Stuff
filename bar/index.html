@@ -5,7 +5,7 @@
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700" rel="stylesheet">
   <link rel="stylesheet" href="../styles/css/styles.css"></head>
 <body>
-  <div id="chartid">
+  <div id="chartbarid">
   </div>
 
   <div id="legend"></div>
@@ -16,7 +16,7 @@
 
   // margins
   var margin = {top: 20, right: 20, bottom: 100, left: 50},
-    width = 1000 - margin.left - margin.right,
+    width = 500 - margin.left - margin.right,
     height = 250 - margin.top - margin.bottom;
 
   //create scales
@@ -28,21 +28,30 @@
 
   //colors
   var color = d3.scale.ordinal()
-    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+    .range(["#00a9e0", "#40c1ac", "#ffa300", "#fd0000", "#e5e5e5", "#4d4f53", "#4d4f53"]);
 
   //x axis
   var xAxis = d3.svg.axis()
     .scale(x0)
-    .orient("bottom");
+    .orient("bottom")
+    .innerTickSize(-height)
+    .outerTickSize(0)
+    .tickPadding(10)
+    ;
 
   //formatting for output
   var formatPercent = d3.format(".1%");
 
   //y axis
   var yAxis = d3.svg.axis()
-      .scale(y)
-      .orient("left")
-      .tickFormat(formatPercent);
+    .scale(y)
+    .orient("left")
+    .tickFormat(formatPercent)
+    .ticks(5)
+    .innerTickSize(-width)
+    .outerTickSize(0)
+    .tickPadding(10)
+    ;
 
   //tool tips
   var tip = d3.tip()
@@ -53,7 +62,7 @@
     })
 
   //add svg
-  var svg = d3.select("div#chartid")
+  var svg = d3.select("div#chartbarid")
     .append("div")
     .classed("svg-container", true)
     .append("svg")
@@ -89,14 +98,15 @@
       .call(xAxis);
     //y axis
     svg.append("g")
-    .attr("class", "y axis")
-    .call(yAxis)
-    .append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("y", 6)
-    .attr("dy", ".71em")
-    .style("text-anchor", "end")
-    .text("percentage");
+      .attr("class", "y axis")
+      .call(yAxis)
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      //.text("percentage")
+    ;
 
     // x axis text
     var issuer = svg.selectAll(".issuer")
@@ -123,7 +133,7 @@
       .data(ageNames.slice().reverse())
       .enter().append("g")
       .attr("class", "legend")
-      .attr("transform", function(d, i) { return "translate(" + (-width+ width/20 + i* width/5.5) + "," + "400" + ")"; });
+      .attr("transform", function(d, i) { return "translate(" + (-width+ width/20 + i* width/5.5) + "," + "150" + ")"; });
 
     //draw the legend bars
     legend.append("rect")
@@ -131,7 +141,9 @@
       .attr("width", 18)
       .attr("height", 18)
       .style("fill", color)
-      ;//.position("left");
+      ;
+
+      //.position("left");
 
     //draw the legend text
     legend.append("text")

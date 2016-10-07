@@ -3,6 +3,8 @@ $teal: #507075;
 $vantiv-blue: #00a9e0;
 $grey-black: #2c2c2c;
 $height: 600px;
+$light-grey: #8b8c8d;
+$even-lighter-grey: #dee7ef;
 
 /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!DONUT STUFFF*/
 .d3-tip {
@@ -14,9 +16,10 @@ $height: 600px;
 
 .data {
   font-size:12px;
-  color:grey;
+  color: grey;
 }
 
+/*
 .arc {
   stroke:  #fff;
 
@@ -29,7 +32,7 @@ $height: 600px;
 .arc path {
   stroke: #fff;
 }
-
+*/
 .d3-tip {
   line-height: 1;
   font-weight: bold;
@@ -37,6 +40,7 @@ $height: 600px;
   background: rgba(0, 0, 0, 0.8);
   color: #fff;
   border-radius: 2px;
+  font-size: 15px
 }
 
 /* Creates a small triangle extender for the tooltip */
@@ -58,6 +62,17 @@ $height: 600px;
   top: 100%;
   left: 0;
 }
+div.tooltip { 
+  position: absolute;     
+  text-align: center;     
+  width: 60px;               
+  padding: 2px;       
+  font: 12px sans-serif;    
+  background: lightsteelblue; 
+  border: 0px;    
+  border-radius: 8px;     
+  pointer-events: none;     
+}
 
 svg{
   padding: 50px;
@@ -72,17 +87,7 @@ svg{
 .area {
   fill: steelblue;
 }
-div.tooltip { 
-  position: absolute;     
-  text-align: center;     
-  width: 60px;               
-  padding: 2px;       
-  font: 12px sans-serif;    
-  background: lightsteelblue; 
-  border: 0px;    
-  border-radius: 8px;     
-  pointer-events: none;     
-}
+
 
 .svg-container {
   display: inline-block;
@@ -111,7 +116,8 @@ body {
 .axis path,
 .axis line {
   fill: none;
-  stroke: #000;
+  stroke: $light-grey;
+  opacity: 0.1;
   shape-rendering: crispEdges;
 }
 .bar {
@@ -144,13 +150,26 @@ body {
 }
 
 .padding{
-  padding: 10em;
+  padding: 10%;
 }
 .svg-content-responsive-pie{
-    display: inline-block;
+  display: inline-block;
   position: absolute;
   top: 10px;
   left: 0;
   width: 94%;
   padding: 1em;
+}
+
+/* bar graph */
+.tick text{
+  font-size: 8px;
+  fill: $light-grey;
+  font-weight: 100;
+
+}
+
+.tick line{
+  opacity: 0.1;
+  fill: $light-grey;
 }

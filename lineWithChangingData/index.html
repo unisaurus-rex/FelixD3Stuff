@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="../styles/css/styles.css"></head>
 <body> 
 <div class="chartwrapper">
-   <div id="chartid">
+   <div id="chartlineid">
     <select id = "opts">
       <option value="daily.tsv">daily</option>
       <option value="yearly.tsv">yearly</option>
@@ -17,7 +17,7 @@
   <script src="//d3js.org/d3.v3.min.js"></script>
   <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
   <script>
-    console.log(parseInt(d3.select("#chartid").style("width")))
+    console.log(parseInt(d3.select("#chartlineid").style("width")))
 
 
     //set margins for axes
@@ -61,7 +61,7 @@
         ;
 
     //draw the svg and classes into the selected div
-    var svg = d3.select("div#chartid")
+    var svg = d3.select("div#chartlineid")
       .append("div")
       .classed("svg-container", true)
       .append("svg")
