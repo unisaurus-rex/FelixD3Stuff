@@ -43,7 +43,7 @@ function drawBar(){
 
   //tool tips
   var tipthree = d3.tip()
-    .attr('class', 'd3-tipthree')
+    .attr('class', 'd3-tip')
     .offset([0, 0])
     .html(function(d) {
       return "<strong>Percentage:</strong> <span>" + formatPercent(d.value ) + "</span>";
@@ -108,7 +108,6 @@ function drawBar(){
       .attr("transform", function(d) { return "translate(" + x0(d.Issuer) + ",0)"; })
       ;
 
-
     // drawing the bars
     issuer.selectAll("rect")
       .data(function(d) { return d.ages; })
@@ -118,8 +117,8 @@ function drawBar(){
       .attr("y", function(d) { return y(d.value); })
       .attr("height", function(d) { return height - y(d.value); })
       .style("fill", function(d) { return colorthree(d.name); })
-    .on('mouseover', tipthree.show)
-    .on('mouseout', tipthree.hide)
+      .on('mouseover', tipthree.show)
+      .on('mouseout', tipthree.hide)
       ;
 
     // legend stuff this will likely by css instead of d3
@@ -139,7 +138,7 @@ function drawBar(){
 
     //draw the legend text
     legend.append("text")
-      .attr("x", width - 24)
+      .attr("x", width - 20)
       .attr("y", 5)
       .attr("dy", ".35em")
       .style("text-anchor", "end")
