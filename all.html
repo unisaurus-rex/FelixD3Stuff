@@ -23,8 +23,8 @@
   </div>
 
 
-  <script src="//d3js.org/d3.v3.min.js"></script>
-  <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+  <script src="//d3js.org/d3.v4.min.js"></script>
+  <script src="d3-tip.js"></script>
   <script>
 
 function drawLine(){
@@ -34,34 +34,34 @@ function drawLine(){
         height = 175 - margin.top - margin.bottom;
 
     //parses time into correct format
-    var parseDate = d3.time.format("%d-%b-%y").parse;
-    var formatTime = d3.time.format("%e %B");
-    var parseMonthYear = d3.time.format("%b-%y").parse;
+    var parseDate = d3.timeParse("%d-%b-%y");
+    var formatTime = d3.timeParse("%e %B");
+    var parseMonthYear = d3.timeFormat("%b-%y");
 
     //setup axes
-    var x = d3.time.scale()
+    var x = d3.scaleTime()
         .range([0, width]);
 
-    var y = d3.scale.linear()
+    var y = d3.scaleLinear()
         .range([height, 0]);
 
-    var z = d3.scale.linear()
+    var z = d3.scaleLinear()
         .range([0, width]);
 
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom");
+    var xAxis = d3.axisBottom()
+        .scale(x);
+   //     .orient("bottom");
 
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left");
+    var yAxis = d3.axisLeft()
+        .scale(y);
+ //       .orient("left");
 
-    var zAxis = d3.svg.axis()
+    /*var zAxis = d3.svg.axis()
         .scale(y)
-        .orient("left");
+        .orient("left");*/
 
     //return data
-    var area = d3.svg.area()
+    var area = d3.area()
         .x(function(d) { return x(d.date); })
         .y(function(d){ return z(d.pin); })
         .y0(height)
@@ -243,7 +243,7 @@ function drawDonut(){
       var innerrad = radius/3;
 
   //set the colors
-  var color = d3.scale.ordinal()
+  var color = d3.scaleOrdinal()
       .range(["#40c1ac", "#fd0000", "#ffa300", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
   //set the tooltip
@@ -256,11 +256,11 @@ function drawDonut(){
     
 
   //set size of outer arc
-  var arc = d3.svg.arc()
+  var arc = d3.arc()
       .outerRadius(radius)
       .innerRadius(radius - innerrad);
 
-  var pie = d3.layout.pie()
+  var pie = d3.pie()
       .sort(null)
       .value(function(d) { return d.population; })
       .padAngle(.03)
@@ -310,7 +310,7 @@ function drawDonut(){
     ;
 
   //hover circle
-  var arcOver = d3.svg.arc()
+  var arcOver = d3.arc()
     .innerRadius(radius-innerrad)
     .outerRadius(radius + 15);
 
@@ -371,22 +371,30 @@ function drawBar(){
     height = 250 - margin.top - margin.bottom;
 
   //create scales
-  var x0 = d3.scale.ordinal()
-    .rangeRoundBands([0, width], .1);
-  var x1 = d3.scale.ordinal();
-  var y = d3.scale.linear()
+  var x0 = d3.scaleBand()
+    .rangeRound([0, width])
+    //.round (.1)
+    .padding(0.5)
+    .align(0.1)
+    ;
+    //.round(.1)
+  var x1 = d3.scaleBand()
+      .range(x0.bandwidth())
+      //.range(x0.bandwidth())
+  ;
+  var y = d3.scaleLinear()
     .range([height, 0]);
 
   //colors
-  var colorthree = d3.scale.ordinal()
+  var colorthree = d3.scaleOrdinal()
     .range(["#00a9e0", "#40c1ac", "#ffa300", "#fd0000", "#e5e5e5", "#4d4f53"]);
 
   //x axis
-  var xAxis = d3.svg.axis()
+  var xAxis = d3.axisBottom()
     .scale(x0)
-    .orient("bottom")
-    .innerTickSize(-height)
-    .outerTickSize(0)
+    //.orient("bottom")
+    .tickSizeInner(-height)
+    .tickSizeOuter(0)
     .tickPadding(10)
     ;
 
@@ -394,20 +402,20 @@ function drawBar(){
   var formatPercent = d3.format(".1%");
 
   //y axis
-  var yAxis = d3.svg.axis()
+  var yAxis = d3.axisLeft()
     .scale(y)
-    .orient("left")
+    //.orient("left")
     .tickFormat(formatPercent)
     .ticks(5)
-    .innerTickSize(-width)
-    .outerTickSize(0)
+    .tickSizeInner(-width)
+    //.tickSizeOuter(0)
     .tickPadding(10)
     ;
 
   //tool tips
-  var tipthree = d3.tip()
-    .attr('class', 'd3-tipthree')
-    .offset([0, 0])
+  var tip = d3.tip()
+    .attr('class', 'd3-tip')
+    .offset([-1020, 0])
     .html(function(d) {
       return "<strong>Percentage:</strong> <span>" + formatPercent(d.value ) + "</span>";
     })
@@ -415,6 +423,7 @@ function drawBar(){
 
   //add svg
   var svgthree = d3.select("div#chartbarid")
+    .append("div")
     .append("div")
     .classed("svg-container", true)
     .append("svg")
@@ -425,7 +434,7 @@ function drawBar(){
     ;
 
   //initialize tooltip
-  svgthree.call(tipthree);
+  svgthree.call(tip);
 
   //plot data 
   d3.csv("data.csv", function(error, data) {
@@ -441,7 +450,7 @@ function drawBar(){
 
     //set domains
     x0.domain(data.map(function(d) { return d.Issuer; }));
-    x1.domain(ageNames).rangeRoundBands([0, x0.rangeBand()]);
+    //x1.domain(ageNames).rangeRound([0, x0.rangeBands()]);
     y.domain([0, d3.max(data, function(d) { return d3.max(d.ages, function(d) { return d.value; }); })]);
 
     //x axis
@@ -468,18 +477,18 @@ function drawBar(){
       .attr("class", "issuer")
       .attr("transform", function(d) { return "translate(" + x0(d.Issuer) + ",0)"; })
       ;
-
     // drawing the bars
-    issuer.selectAll("rect")
+    issuer.selectAll(".bar")
       .data(function(d) { return d.ages; })
       .enter().append("rect")
-      .attr("width", x1.rangeBand())
-      .attr("x", function(d) { return x1(d.name); })
+      .attr("class", "bar")
+      .attr("width", x1.bandwidth())
+      .attr("x", function(d) { return x1(d.value); })
       .attr("y", function(d) { return y(d.value); })
       .attr("height", function(d) { return height - y(d.value); })
       .style("fill", function(d) { return colorthree(d.name); })
-      .on('mouseover', tipthree.show)
-      .on('mouseout', tipthree.hide)
+      .on('mouseover', tip.show)
+      .on('mouseout', tip.hide)
       ;
 
     // legend stuff this will likely by css instead of d3
