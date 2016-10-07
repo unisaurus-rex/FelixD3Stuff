@@ -30,8 +30,8 @@
 function drawLine(){
    //set margins for axes
     var margin = {top: 20, right: 20, bottom: 30, left: 50},
-        width = 400- margin.left - margin.right,
-        height = 175 - margin.top - margin.bottom;
+      width = 400- margin.left - margin.right,
+      height = 175 - margin.top - margin.bottom;
 
     //parses time into correct format
     var parseDate = d3.time.format("%d-%b-%y").parse;
@@ -51,6 +51,7 @@ function drawLine(){
     var xAxis = d3.svg.axis()
       .scale(x)
       .orient("bottom")
+      .ticks(8)
       .innerTickSize(-height)
       .outerTickSize(0)
       .tickPadding(10)
@@ -63,7 +64,7 @@ function drawLine(){
       .innerTickSize(-width)
       .outerTickSize(0)
       .tickPadding(10)
-    ;
+      ;
 
     var zAxis = d3.svg.axis()
         .scale(y)
@@ -144,7 +145,6 @@ function drawLine(){
             .attr("transform", "translate(0," + height + ")")
             .call(xAxis);
 
-
           //y axis
           svgtwo.append("g")
             .attr("class", "y axis")
@@ -167,7 +167,8 @@ function drawLine(){
             .attr("cy", function(d) { return y(d.close); })
             .attr("test", function(d) {return y(d.pin); })
             .on('mouseover', tip.show)
-            .on('mouseout', tip.hide);        
+            .on('mouseout', tip.hide)
+            ;        
 
         })
       }
@@ -194,13 +195,15 @@ function drawLine(){
         svgtwo.append("path")
           .datum(data)
           .attr("class", "area")
-          .attr("d", area);
+          .attr("d", area)
+          ;
 
         //x axis
         svgtwo.append("g")
           .attr("class", "x axis")
           .attr("transform", "translate(0," + height + ")")
-          .call(xAxis);
+          .call(xAxis)
+          ;
 
         //y axis
         svgtwo.append("g")
@@ -225,7 +228,7 @@ function drawLine(){
           .attr("cy", function(d) { return y(d.close); })
           .attr("test", function(d) {return y(d.pin); })
           .on('mouseover', tip.show)
-          .on('mouseout', tip.hide);  
+          .on('mouseout', tip.hide)
           ;   
         }) //end yearly plot
       } //end if for year
@@ -240,10 +243,7 @@ function drawLine(){
  drawLine();
 
 function drawDonut(){
-
-
-
-     //set size
+   //set size
   console.log ();
   var width =  500,
       height =  500,
@@ -281,9 +281,8 @@ function drawDonut(){
     .append("svg")
     //.attr("preserveAspectRatio", "xMinYMin meet")
     .attr("viewBox","0 0 " + width + " " + height)
-      //class to make it responsive
+    //class to make it responsive
     .classed("svg-content-responsive-pie", true)
-//    .append("svg")
     .attr("width", width)
     .attr("height", height)
     .append("g")
