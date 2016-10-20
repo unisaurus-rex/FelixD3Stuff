@@ -78,6 +78,9 @@ svg {
   vertical-align: top;
   overflow: hidden; }
 
+svg.svg-container {
+  overflow: visible; }
+
 .svg-content-responsive {
   display: inline-block;
   position: absolute;
@@ -86,6 +89,9 @@ svg {
   padding: 0px;
   width: 100%;
   padding-bottom: 5em; }
+
+svg.svg-content-responsive {
+  overflow: visible; }
 
 body {
   font-family: 'Source Sans Pro', sans-serif;

@@ -94,6 +94,9 @@ svg{
   vertical-align: top;
   overflow: hidden;
 }
+svg.svg-container{
+  overflow: visible;
+}
 .svg-content-responsive {
   display: inline-block;
   position: absolute;
@@ -103,7 +106,9 @@ svg{
   width: 100%;
   padding-bottom: 5em;
 }
-
+svg.svg-content-responsive{
+  overflow: visible;
+}
 
 
 body {

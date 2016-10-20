@@ -70,7 +70,7 @@ function drawLine(){
         .attr('class', 'd3-tip')
         .offset([-10, 0])
         .html(function(d) {
-          return "<strong>Spend:</strong> <span>" + d.pin + "k" + "</span>";
+          return "<strong>Spend:</strong>" + d.pin + "k" + "</span>";
         })
       svg.call(secondtip);
 
